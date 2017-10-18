@@ -498,6 +498,7 @@ namespace SCP
             return browser;
         }
         [TestMethod]
+        /* Sendig message to user2, deleting message from list, sending response to user1, opening message from user2*/
         public void DirectMessage ()
         {
             var user1 = Initialize1();
