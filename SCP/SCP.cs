@@ -195,7 +195,7 @@ namespace SCP
             scpPage.browser.Quit();
         }
     }
-        [TestClass]
+    [TestClass]
     public class MainPage
     {
         public Browser Initialize()
@@ -344,6 +344,140 @@ namespace SCP
             Assert.AreEqual(expectedSetting, actualSetting);
             Assert.AreEqual(expectedValue, actualValue);
         }
+    }
+    [TestClass]
+    public class DirectMessage
+    {
+        public Browser Initialize()
+        {
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--start-maximized");
+            var browser = new Browser();
+            browser.SetBrowser = new ChromeDriver(options);
+            browser.OpenPage(Variables.url);
+            //browser.OpenPageWithAuthentication(Variables.urlWithAuthentication, Variables.url);
+            return browser;
+        }
+        [TestMethod]
+        public void CreateNew()
+        {
+            var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.aliyahEmail);
+            scpPage.EnterLoginPassword(Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton(Variables.newChatButton);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.EnterMessage(Variables.messageText);
+            scpPage.ClickOnButton(Variables.sendButton);
+
+            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(Variables.messageText, messageInWeb);
+        }
+       // [TestMethod]
+       /* public void SearcForContacts()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Logged in as";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+        }
+        [TestMethod]
+        public void SendMessage()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Send feedback or get support";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[2].Text;
+            var expectedValue = "myscp@schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[0].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void ReceiveMessage()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Send feedback or get support";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[2].Text;
+            var expectedValue = "myscp@schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[0].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void MessageStatus()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Schumacher Clinical Partners website";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
+            var expectedValue = "www.schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void SendMessageInOld()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Schumacher Clinical Partners website";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
+            var expectedValue = "www.schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void Delete()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Schumacher Clinical Partners website";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
+            var expectedValue = "www.schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void StartWithUserThatWasDeleted()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Schumacher Clinical Partners website";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
+            var expectedValue = "www.schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void SearchForDirectMessage()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Schumacher Clinical Partners website";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
+            var expectedValue = "www.schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }*/
     }
 
 

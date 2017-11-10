@@ -37,7 +37,7 @@ namespace Framework
         public static string blueButtonTagName = "button";
         public static string blueButtonTitle = "//button[@title='Start new message']";
 
-        public static string newChatButton = "li";
+        public static string newChatButton = "//span[contains(text(),'New message')]";
         public static string newGroupButton = "li";
         public static string newBroadcastButton = "li";
 
