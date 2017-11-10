@@ -16,6 +16,9 @@ namespace Framework
         public static string louisaEmail = "louisa.conn@devbridge.com";
         public static string louisaPassword = "pa$$word";
 
+        public static string jimEmail = "jim.doe";
+        public static string jimPassword = "pa$$word";
+
         public static string aliyahEmail = "aliyah.miller@devbridge.com";
         public static string aliyahPassword = "pa$$word";
 
@@ -23,7 +26,7 @@ namespace Framework
         public static string loginPasswordWrong = "password";
 
         public static string loginEmailInvalid1 = "john.doe.minique@.com";
-        public static string loginEmailInvalid2 = "john.doe";
+        public static string loginEmailInvalid2 = "john.doee";
 
         public static string longEmail = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
@@ -64,5 +67,11 @@ namespace Framework
         public static string agreeToDelete = "//span[contains(text(),'Delete')]";
 
         public static string messageWasRead = "Message has been read";
+
+        public static string forgotPassword = "//*[contains(text(),'Forgot')]";
+
+        public static string toggleMenu = "//button[@title='Toggle menu']";
+        public static string signOut = "//*[contains(text(),'Sign out')]";
+        public static string settings = "//*[contains(text(),'Settings')]";
     }
 }
