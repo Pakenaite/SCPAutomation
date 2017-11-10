@@ -20,9 +20,8 @@ namespace SCP
             //browser.OpenPageWithAuthentication(Variables.urlWithAuthentication, Variables.url);
             return browser;
         }
-
         [TestMethod]
-        public void SuccessfulLogin()
+        public void SuccessfulLoginDomain()
         {
             var scpPage = Initialize();
 
@@ -36,7 +35,21 @@ namespace SCP
 
             scpPage.browser.Quit();
         }
+        [TestMethod]
+        public void SuccessfulLoginNoDomain()
+        {
+            var scpPage = Initialize();
 
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+
+            var expectedWelcome = "Stay connected with mySCP Messenger";
+            var actualWelcome = scpPage.browser.FindElements(By.TagName("h1"))[1].Text;
+            Assert.AreEqual(expectedWelcome, actualWelcome);
+
+            scpPage.browser.Quit();
+        }
         [TestMethod]
         public void UnsuccessfulLoginEmail()
         {
@@ -55,8 +68,24 @@ namespace SCP
             Thread.Sleep(1000);
             scpPage.browser.Quit();
         }
+        [TestMethod]
+        public void UnsuccessfulLoginNoDomain()
+        {
+            var scpPage = Initialize();
 
+            scpPage.EnterLoginEmail(Variables.loginEmailInvalid2);
+            scpPage.EnterLoginPassword(Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
 
+            var xpath2 = "//*[contains(text(),'Username or Password is incorrect.')]";
+            var actualNotice = scpPage.browser.FindElement(By.XPath(xpath2)).Displayed;
+            var errorPhoto = scpPage.browser.FindElements(By.TagName("img"))[1].Displayed;
+            Assert.IsTrue(actualNotice);
+            Assert.IsTrue(errorPhoto);
+
+            Thread.Sleep(1000);
+            scpPage.browser.Quit();
+        }
         [TestMethod]
         public void UnsuccessfulLoginPassword()
         {
@@ -73,217 +102,275 @@ namespace SCP
             Assert.IsTrue(errorPhoto);
 
             Thread.Sleep(1000);
-            scpPage.browser.Quit();
+            scpPage.browser.Close();
         }
-
-        /*No longer needed, as user can login without domain
-         * [TestMethod]
-        public void EmailValidation()
+        [TestMethod]
+        public void UnsuccessfulLoginPasswordNoDomain()
         {
             var scpPage = Initialize();
 
-            scpPage.EnterLoginEmail(Variables.loginEmailInvalid1);
+            scpPage.EnterLoginEmail(Variables.jimEmail);
             scpPage.EnterLoginPassword(Variables.loginPasswordWrong);
             scpPage.ClickOnButton(Variables.loginButton);
 
-            var xpath2 = "//*[contains(text(),'Please enter a valid email address')]";
+            var xpath2 = "//*[contains(text(),'Username or Password is incorrect.')]";
             var actualNotice = scpPage.browser.FindElement(By.XPath(xpath2)).Displayed;
             var errorPhoto = scpPage.browser.FindElements(By.TagName("img"))[1].Displayed;
             Assert.IsTrue(actualNotice);
             Assert.IsTrue(errorPhoto);
 
-            scpPage.ClearField(Variables.usernameField);
-            scpPage.EnterLoginEmail(Variables.loginEmailInvalid2);
-            scpPage.ClickOnButton(Variables.loginButton);
-            Thread.Sleep(2000);
-
-            var actualNotice1 = scpPage.browser.FindElement(By.XPath(xpath2)).Displayed;
-            var errorPhoto1 = scpPage.browser.FindElements(By.TagName("img"))[1].Displayed;
-            Assert.IsTrue(actualNotice1);
-            Assert.IsTrue(errorPhoto1);
-
             Thread.Sleep(1000);
-            scpPage.browser.Quit();
-        }*/
+            scpPage.browser.Close();
+        }
+        [TestMethod]
+        public void ForgotPassword()
+        {
+            var scpPage = Initialize();
+            scpPage.ClickOnButton(Variables.forgotPassword);
 
+            var expectedHeader = "Forgot your password";
+            var actualHeader = scpPage.browser.FindElement(By.TagName("h3")).Text;             
+            Thread.Sleep(1000);
+            scpPage.browser.Close();
+            Assert.AreEqual(expectedHeader, actualHeader);
+        }
         [TestMethod]
         public void EmailFieldLimit()
         {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
-
-            var emailField = browser.FindElement(By.Name("username"));
-
+            var scpPage = Initialize();
+            var emailField = scpPage.browser.FindElement(By.Name("username"));
             emailField.SendKeys("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
             var readSymbols = emailField.GetAttribute("value");
-
-
             Thread.Sleep(1000);
-            browser.Quit();
+            scpPage.browser.Quit();
             Assert.AreEqual(50, readSymbols.Length);
         }
         [TestMethod]
         public void PasswordFieldLimit()
         {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
-
-            var passwordField = browser.FindElement(By.Name("password"));
-
+            var scpPage = Initialize();
+            var passwordField = scpPage.browser.FindElement(By.Name("password"));
             passwordField.SendKeys("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
             var readSymbols = passwordField.GetAttribute("value");
-
-
             Thread.Sleep(1000);
-            browser.Quit();
+            scpPage.browser.Quit();
             Assert.AreEqual(50, readSymbols.Length);
         }
         [TestMethod]
         public void SuccessfulLogout()
         {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://admin:m1y2s3c4p5q@qa.myscp.com";
-            Thread.Sleep(1000);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
+            var scpPage = Initialize();
 
-            var emailField = browser.FindElement(By.Name("username"));
-            var passwordField = browser.FindElement(By.Name("password"));
-            var xpath = "//*[contains(text(),'Sign in')]";
-            var loginButton = browser.FindElement(By.XPath(xpath));
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.toggleMenu);
+            scpPage.ClickOnButton(Variables.signOut);
 
-            emailField.SendKeys("jane.doe@devbridge.com");
-            passwordField.SendKeys("pa$$word");
-            loginButton.Click();
-            Thread.Sleep(2000);
+            var actualTitle = scpPage.browser.FindElement(By.TagName("h1")).Text;
+            var expectedTitle = "Communication Portal";
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedTitle, actualTitle);
+        }
+        [TestMethod]
+        public void Relogin()
+        {
+            var scpPage = Initialize();
 
-            var toggleMenu = browser.FindElement(By.TagName("button"));
-            toggleMenu.Click();
-            var xpath2 = "//*[contains(text(),'Sign out')]";
-            var signOut = browser.FindElement(By.XPath(xpath2));
-            signOut.Click();
-            Thread.Sleep(1000);
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.toggleMenu);
+            scpPage.ClickOnButton(Variables.signOut);
+            scpPage.EnterLoginEmail(Variables.loginEmail);
+            scpPage.EnterLoginPassword(Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
 
-            var expectedImage = browser.FindElements(By.TagName("img"))[0].Displayed;
-            browser.Quit();
+            var expectedWelcome = "Stay connected with mySCP Messenger";
+            var actualWelcome = scpPage.browser.FindElements(By.TagName("h1"))[1].Text;
+            Assert.AreEqual(expectedWelcome, actualWelcome);
 
-            Assert.IsTrue(expectedImage);
+            scpPage.browser.Quit();
         }
     }
-
-    [TestClass]
+        [TestClass]
     public class MainPage
     {
-        [TestMethod]
-        public void NoMessages()
+        public Browser Initialize()
         {
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://admin:m1y2s3c4p5q@qa.myscp.com";
-            Thread.Sleep(1000);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
+            var browser = new Browser();
+            browser.SetBrowser = new ChromeDriver(options);
+            browser.OpenPage(Variables.url);
+            //browser.OpenPageWithAuthentication(Variables.urlWithAuthentication, Variables.url);
+            return browser;
+        }
+        [TestMethod]
+        public void HomePageHeader()
+        {
+            var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
 
-            var emailField = browser.FindElement(By.Name("username"));
-            var passwordField = browser.FindElement(By.Name("password"));
-            var xpath = "//*[contains(text(),'Sign in')]";
-            var loginButton = browser.FindElement(By.XPath(xpath));
-
-            emailField.SendKeys("jim.doe@devbridge.com");
-            passwordField.SendKeys("pa$$word");
-            loginButton.Click();
-            Thread.Sleep(1000);
+            var expectedHeader = "mySCP Messenger";
+            var actualHeader = scpPage.browser.FindElements(By.TagName("a"))[0].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedHeader, actualHeader);
+        }
+        [TestMethod]
+        public void HomePageWelcome()
+        {
+            var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
 
             var expectedWelcome = "Stay connected with mySCP Messenger";
-            var actualWelcome = browser.FindElements(By.TagName("h2"))[1].Text;
-
-            var expectedNoMessages = "No Messages";
-            var actualNoMessages = browser.FindElements(By.TagName("h2"))[0].Text;
-
-            var actualMessages = browser.FindElement(By.TagName("a")).Displayed;
-
-            Thread.Sleep(1000);
-            browser.Quit();
-
-            Assert.IsFalse(actualMessages);
-            Assert.AreEqual(expectedNoMessages, actualNoMessages);
+            var actualWelcome = scpPage.browser.FindElements(By.TagName("h1"))[1].Text;
+            scpPage.browser.Quit();
             Assert.AreEqual(expectedWelcome, actualWelcome);
-
         }
         [TestMethod]
         public void SeveralMessages()
         {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://admin:m1y2s3c4p5q@qa.myscp.com";
+            var scpPage = Initialize();
+
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+
+            var hrDisplayed = scpPage.browser.FindElement(By.TagName("hr")).Displayed;
+            scpPage.browser.Quit();
+            Assert.IsTrue(hrDisplayed);
+        }
+        [TestMethod]
+        public void NoMessages()
+        {
+            var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.loginEmail);
+            scpPage.EnterLoginPassword(Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+
+            var expectedNoMessages = "No Messages";
+            var actualNoMessages = scpPage.browser.FindElement(By.TagName("h2")).Text;
             Thread.Sleep(1000);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedNoMessages, actualNoMessages);
+        }
+        [TestMethod]
+        public void BlueButton()
+        {
+            var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.loginEmail);
+            scpPage.EnterLoginPassword(Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
 
-            var emailField = browser.FindElement(By.Name("username"));
-            var passwordField = browser.FindElement(By.Name("password"));
-            var xpath = "//*[contains(text(),'Sign in')]";
-            var loginButton = browser.FindElement(By.XPath(xpath));
+            var blueButton = scpPage.browser.FindElement(By.XPath("//button[@title='Start new message']")).Displayed;
+            scpPage.browser.Quit();
+            Assert.IsTrue(blueButton);
+        }
+        [TestMethod]
+        public void SettingsMenu()
+        {
+            var scpPage = Initialize();
 
-            emailField.SendKeys("jane.doe@devbridge.com");
-            passwordField.SendKeys("pa$$word");
-            loginButton.Click();
-            Thread.Sleep(1000);
+            scpPage.EnterLoginEmail(Variables.loginEmail);
+            scpPage.EnterLoginPassword(Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.toggleMenu);
+            scpPage.ClickOnButton(Variables.settings);
 
-            var expectedWelcome = "Stay connected with mySCP Messenger";
-            var actualWelcome = browser.FindElements(By.TagName("h1"))[1].Text;
-
-            var actualMessages = browser.FindElements(By.TagName("span"))[0].Displayed;
-
-            Thread.Sleep(1000);
-            browser.Quit();
-
-            Assert.IsTrue(actualMessages);
-            Assert.AreEqual(expectedWelcome, actualWelcome);
-
+            var actualHeader = scpPage.browser.FindElements(By.TagName("h1"))[0].Text;
+            var expectedHeader = "Settings";
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedHeader, actualHeader);
         }
     }
     [TestClass]
-    public class BlueButton
+    public class Settings
     {
-        [TestMethod]
-        public void OpenClose()
+        public Browser Initialize()
         {
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://admin:m1y2s3c4p5q@qa.myscp.com";
-            Thread.Sleep(1000);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
+            var browser = new Browser();
+            browser.SetBrowser = new ChromeDriver(options);
+            browser.OpenPage(Variables.url);
+            //browser.OpenPageWithAuthentication(Variables.urlWithAuthentication, Variables.url);
+            browser.EnterLoginEmail(Variables.jimEmail);
+            browser.EnterLoginPassword(Variables.jimPassword);
+            browser.ClickOnButton(Variables.loginButton);
+            browser.ClickOnButton(Variables.toggleMenu);
+            browser.ClickOnButton(Variables.settings);
+            return browser;
+        }
+        [TestMethod]
+        public void LoggedInAs()
+        {
+            var scpPage = Initialize();
 
-            var emailField = browser.FindElement(By.Name("username"));
-            var passwordField = browser.FindElement(By.Name("password"));
-            var xpath = "//*[contains(text(),'Sign in')]";
-            var loginButton = browser.FindElement(By.XPath(xpath));
+            var expectedSetting = "Logged in as";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+        }
+        [TestMethod]
+        public void SendFeedbackOrGetSupport()
+        {
+            var scpPage = Initialize();
 
-            emailField.SendKeys("jim.doe@devbridge.com");
-            passwordField.SendKeys("pa$$word");
-            loginButton.Click();
-            Thread.Sleep(1000);
+            var expectedSetting = "Send feedback or get support";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[2].Text;
+            var expectedValue = "myscp@schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[0].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+        [TestMethod]
+        public void SCPWebsite()
+        {
+            var scpPage = Initialize();
+
+            var expectedSetting = "Schumacher Clinical Partners website";
+            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
+            var expectedValue = "www.schumacherclinical.com";
+            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual(expectedSetting, actualSetting);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+    }
+
+
+
+    [TestClass]
+    public class BlueButton
+    {
+        public Browser Initialize()
+        {
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--start-maximized");
+            var browser = new Browser();
+            browser.SetBrowser = new ChromeDriver(options);
+            browser.OpenPage(Variables.url);
+            //browser.OpenPageWithAuthentication(Variables.urlWithAuthentication, Variables.url);
+            return browser;
+        }
+
+        /*        Not necessary anymore, as case is covered by test MenuItems
+ *        [TestMethod]
+        public void OpenClose()
+        {
+            var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
 
             var blueButtonDisplayed = browser.FindElements(By.TagName("button"))[1].Displayed;
 
@@ -298,52 +385,35 @@ namespace SCP
             Thread.Sleep(1000);
             browser.Quit();
         }
+        */
         [TestMethod]
         public void MenuItems()
         {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--start-maximized");
-            //Arba vietoj siu dvieju above ir options apacioj rasyti: browser.Manage().Window.Maximize();
-            IWebDriver browser = new ChromeDriver(options);
-            browser.Url = "https://admin:m1y2s3c4p5q@qa.myscp.com";
-            Thread.Sleep(1000);
-            browser.Url = "https://qa.myscp.com";
-            Thread.Sleep(1000);
+            var scpPage = Initialize();
 
-            var emailField = browser.FindElement(By.Name("username"));
-            var passwordField = browser.FindElement(By.Name("password"));
-            var xpath = "//*[contains(text(),'Sign in')]";
-            var loginButton = browser.FindElement(By.XPath(xpath));
+            scpPage.EnterLoginEmail(Variables.jimEmail);
+            scpPage.EnterLoginPassword(Variables.jimPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
 
-            emailField.SendKeys("jim.doe@devbridge.com");
-            passwordField.SendKeys("pa$$word");
-            loginButton.Click();
-            Thread.Sleep(1000);
 
-            var blueButton = browser.FindElements(By.TagName("button"))[1];
-
-            blueButton.Click();
-
-            Thread.Sleep(2000);
-
-            var numberOfMenuItems = browser.FindElements(By.TagName("li")).Count;
+            var numberOfMenuItems = scpPage.browser.FindElements(By.TagName("li")).Count;
             var expectedNumberOfMenuItems = 3;
 
             var xpath1 = "//*[contains(text(),'New broadcast')]";
             var xpath2 = "//*[contains(text(),'New group')]";
             var xpath3 = "//*[contains(text(),'New message')]";
 
-            var newBroadcast = browser.FindElement(By.XPath(xpath1)).Displayed;
-            var newGroup = browser.FindElement(By.XPath(xpath2)).Displayed;
-            var newChat = browser.FindElement(By.XPath(xpath3)).Displayed;
+            var newBroadcast = scpPage.browser.FindElement(By.XPath(xpath1)).Displayed;
+            var newGroup = scpPage.browser.FindElement(By.XPath(xpath2)).Displayed;
+            var newChat = scpPage.browser.FindElement(By.XPath(xpath3)).Displayed;
 
-            browser.Quit();
+            scpPage.browser.Quit();
 
             Assert.AreEqual(expectedNumberOfMenuItems, numberOfMenuItems);
             Assert.IsTrue(newBroadcast);
             Assert.IsTrue(newGroup);
             Assert.IsTrue(newChat);
-
         }
     }
     [TestClass]
