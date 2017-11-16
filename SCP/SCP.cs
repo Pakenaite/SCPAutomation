@@ -374,118 +374,103 @@ namespace SCP
             scpPage.ClickOnButton(Variables.sendButton);
 
             var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
+            var messageStatus = scpPage.browser.FindElement(By.XPath("//span[@title='Message has been sent']")).Displayed;
             scpPage.browser.Quit();
             Assert.AreEqual(Variables.messageText, messageInWeb);
-        }
-       // [TestMethod]
-       /* public void SearcForContacts()
-        {
-            var scpPage = Initialize();
-
-            var expectedSetting = "Logged in as";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[1].Text;
-            scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-        }
-        [TestMethod]
-        public void SendMessage()
-        {
-            var scpPage = Initialize();
-
-            var expectedSetting = "Send feedback or get support";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[2].Text;
-            var expectedValue = "myscp@schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[0].Text;
-            scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
-        }
+            Assert.IsTrue(messageStatus);
+        }        
         [TestMethod]
         public void ReceiveMessage()
         {
             var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.louisaEmail);
+            scpPage.EnterLoginPassword(Variables.louisaPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.aliyahNameMessage);
 
-            var expectedSetting = "Send feedback or get support";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[2].Text;
-            var expectedValue = "myscp@schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[0].Text;
+            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;            
             scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
-        }
-        [TestMethod]
-        public void MessageStatus()
-        {
-            var scpPage = Initialize();
-
-            var expectedSetting = "Schumacher Clinical Partners website";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
-            var expectedValue = "www.schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
-            scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(Variables.messageText, messageInWeb);
         }
         [TestMethod]
         public void SendMessageInOld()
         {
             var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.aliyahEmail);
+            scpPage.EnterLoginPassword(Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.louisaName);
+            var messageStatus = scpPage.browser.FindElement(By.XPath("//span[@title='Message has been read']")).Displayed;
+            scpPage.EnterMessage(Variables.messageText);
+            scpPage.ClickOnButton(Variables.sendButton);
 
-            var expectedSetting = "Schumacher Clinical Partners website";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
-            var expectedValue = "www.schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
             scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
+            Assert.AreEqual(Variables.messageText, messageInWeb);
+            Assert.IsTrue(messageStatus);
         }
         [TestMethod]
         public void Delete()
         {
             var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.aliyahEmail);
+            scpPage.EnterLoginPassword(Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.deleteMessage);
+            scpPage.ClickOnButton(Variables.agreeToDelete);
 
-            var expectedSetting = "Schumacher Clinical Partners website";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
-            var expectedValue = "www.schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            var messageInList = scpPage.browser.FindElements(By.XPath("//div[contains(text(),'Louisa Conn')]")).Count;
+            Assert.AreEqual(0, messageInList);
             scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
-        }
+        }        
         [TestMethod]
         public void StartWithUserThatWasDeleted()
         {
             var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.aliyahEmail);
+            scpPage.EnterLoginPassword(Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton(Variables.newChatButton);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.EnterMessage(Variables.messageText);
+            scpPage.ClickOnButton(Variables.sendButton);
+            scpPage.ClickOnButton(Variables.deleteMessage);
+            scpPage.ClickOnButton(Variables.agreeToDelete);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton(Variables.newChatButton);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.EnterMessage(Variables.messageText);
+            scpPage.ClickOnButton(Variables.sendButton);
 
-            var expectedSetting = "Schumacher Clinical Partners website";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
-            var expectedValue = "www.schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
+            var messageStatus = scpPage.browser.FindElement(By.XPath("//span[@title='Message has been sent']")).Displayed;
             scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
-        }
+            Assert.AreEqual(Variables.messageText, messageInWeb);
+            Assert.IsTrue(messageStatus);
+        }        
         [TestMethod]
         public void SearchForDirectMessage()
         {
             var scpPage = Initialize();
+            scpPage.EnterLoginEmail(Variables.aliyahEmail);
+            scpPage.EnterLoginPassword(Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.loginButton);
+            scpPage.SearchContact(Variables.contactName);
 
-            var expectedSetting = "Schumacher Clinical Partners website";
-            var actualSetting = scpPage.browser.FindElements(By.TagName("b"))[3].Text;
-            var expectedValue = "www.schumacherclinical.com";
-            var actualValue = scpPage.browser.FindElements(By.TagName("a"))[1].Text;
+            var messageInList = scpPage.browser.FindElements(By.XPath("//div[contains(text(),'Louisa Conn')]")).Count;
             scpPage.browser.Quit();
-            Assert.AreEqual(expectedSetting, actualSetting);
-            Assert.AreEqual(expectedValue, actualValue);
-        }*/
+            Assert.AreEqual(1, messageInList);
+        }
     }
-
-
-
     [TestClass]
-    public class BlueButton
+    public class GroupMessage
     {
-        public Browser Initialize()
+        public Browser Initialize(string email, string password)
         {
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--start-maximized");
@@ -493,63 +478,163 @@ namespace SCP
             browser.SetBrowser = new ChromeDriver(options);
             browser.OpenPage(Variables.url);
             //browser.OpenPageWithAuthentication(Variables.urlWithAuthentication, Variables.url);
+            browser.EnterLoginEmail(email);
+            browser.EnterLoginPassword(password);
+            browser.ClickOnButton(Variables.loginButton);
             return browser;
         }
-
-        /*        Not necessary anymore, as case is covered by test MenuItems
- *        [TestMethod]
-        public void OpenClose()
-        {
-            var scpPage = Initialize();
-            scpPage.EnterLoginEmail(Variables.jimEmail);
-            scpPage.EnterLoginPassword(Variables.jimPassword);
-            scpPage.ClickOnButton(Variables.loginButton);
-            scpPage.ClickOnButton(Variables.blueButtonTitle);
-
-            var blueButtonDisplayed = browser.FindElements(By.TagName("button"))[1].Displayed;
-
-            Assert.IsTrue(blueButtonDisplayed);
-
-            var blueButton = browser.FindElements(By.TagName("button"))[1];
-
-            blueButton.Click();
-            Thread.Sleep(2000);
-            var menuListDisplayed = browser.FindElement(By.TagName("ul")).Displayed;
-
-            Thread.Sleep(1000);
-            browser.Quit();
-        }
-        */
         [TestMethod]
-        public void MenuItems()
+        public void CreateNew()
         {
-            var scpPage = Initialize();
-
-            scpPage.EnterLoginEmail(Variables.jimEmail);
-            scpPage.EnterLoginPassword(Variables.jimPassword);
-            scpPage.ClickOnButton(Variables.loginButton);
+            var scpPage = Initialize(Variables.loginEmail,Variables.loginPassword);
             scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton2(Variables.newGroupButton, 0);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.ClickOnButton2("button", 1);
+            scpPage.SearchContact(Variables.contactName1);
+            scpPage.ClickOnButton(Variables.contactTitle1);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 4);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 2);
 
-
-            var numberOfMenuItems = scpPage.browser.FindElements(By.TagName("li")).Count;
-            var expectedNumberOfMenuItems = 3;
-
-            var xpath1 = "//*[contains(text(),'New broadcast')]";
-            var xpath2 = "//*[contains(text(),'New group')]";
-            var xpath3 = "//*[contains(text(),'New message')]";
-
-            var newBroadcast = scpPage.browser.FindElement(By.XPath(xpath1)).Displayed;
-            var newGroup = scpPage.browser.FindElement(By.XPath(xpath2)).Displayed;
-            var newChat = scpPage.browser.FindElement(By.XPath(xpath3)).Displayed;
-
+            var headerInWeb = scpPage.browser.FindElement(By.TagName("h1")).Text;
             scpPage.browser.Quit();
-
-            Assert.AreEqual(expectedNumberOfMenuItems, numberOfMenuItems);
-            Assert.IsTrue(newBroadcast);
-            Assert.IsTrue(newGroup);
-            Assert.IsTrue(newChat);
+            Assert.AreEqual("Louisa C., Aashish G.", headerInWeb);
         }
+        [TestMethod]
+        public void NewCustomTitle()
+        {
+            var scpPage = Initialize(Variables.loginEmail, Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton2(Variables.newGroupButton, 0);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.ClickOnButton2("button", 1);
+            scpPage.SearchContact(Variables.contactName1);
+            scpPage.ClickOnButton(Variables.contactTitle1);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 4);
+            scpPage.ClickOnButton2("button", 1);
+            scpPage.EnterTextByTag("input", Variables.groupTitle, 0);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 2);
+
+            var headerinWeb = scpPage.browser.FindElement(By.TagName("h1")).Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual("E2E Group title", headerinWeb);
+        }
+        [TestMethod]
+        public void SendGroupMessage()
+        {
+            var scpPage = Initialize(Variables.loginEmail, Variables.loginPassword);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton2(Variables.newGroupButton, 0);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.ClickOnButton2("button", 1);
+            scpPage.SearchContact(Variables.contactName1);
+            scpPage.ClickOnButton(Variables.contactTitle1);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 4);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 2);
+            scpPage.EnterMessage(Variables.groupText);
+            scpPage.ClickOnButton(Variables.sendButton);
+
+            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
+            scpPage.browser.Quit();
+            Assert.AreEqual("E2E testing group message 2", messageInWeb);
+        }
+        [TestMethod]
+        public void ReceiveGroupMessage()
+        {
+            var user1 = Initialize(Variables.loginEmail, Variables.loginPassword);
+            var user2 = Initialize(Variables.louisaEmail, Variables.louisaPassword);
+            user1.ClickOnButton(Variables.blueButtonTitle);
+            user1.ClickOnButton2(Variables.newGroupButton, 0);
+            user1.ClickOnButton2("button", 2);
+            user1.SearchContact(Variables.contactName);
+            user1.ClickOnButton(Variables.contactNameXPath);
+            user1.ClickOnButton2("button", 1);
+            user1.SearchContact(Variables.contactName1);
+            user1.ClickOnButton(Variables.contactTitle1);
+            user1.ClickOnButton2(Variables.blueButtonTagName, 4);
+            user1.ClickOnButton2(Variables.blueButtonTagName, 2);
+            user1.EnterMessage(Variables.groupText);
+            user1.ClickOnButton(Variables.sendButton);
+            user2.ClickOnButton("//div[contains(text(),'Louisa C., Aashish G.')]");
+            user1.ClickOnButton2("h3", 0);
+
+            var messageInWeb = user2.browser.FindElement(By.TagName("p")).Text;
+            var messageStatus = user1.browser.FindElement(By.XPath("//span[@title='Message has been read']")).Displayed;
+            user1.browser.Quit();
+            user2.browser.Quit();
+            Assert.AreEqual("E2E testing group message 2", messageInWeb);
+            Assert.IsTrue(messageStatus);
+        }
+        [TestMethod]
+        public void AddNewParticipants()
+        {
+            var scpPage = Initialize(Variables.loginEmail, Variables.loginPassword);
+            var user2 = Initialize(Variables.aliyahEmail, Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton2(Variables.newGroupButton, 0);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.ClickOnButton2("button", 1);
+            scpPage.SearchContact(Variables.contactName1);
+            scpPage.ClickOnButton(Variables.contactTitle1);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 4);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 2);
+            scpPage.EnterMessage(Variables.groupText);
+            scpPage.ClickOnButton(Variables.sendButton);
+            scpPage.ClickOnButton2("h1", 0);
+            scpPage.ClickOnButton(Variables.addNewParticipants);
+            scpPage.EnterTextByTag("input", Variables.aliyahName, 2);
+            scpPage.ClickOnButton(Variables.aliyahXPath);
+            
+            var messageInWeb = user2.browser.FindElements(By.TagName("p"))[0].Text;
+            var groupExists = user2.browser.FindElement(By.XPath("//div[contains(text(),'Louisa C., Aashish G.')]")).Displayed;
+            scpPage.browser.Quit();
+            user2.browser.Quit();
+            Assert.IsTrue(groupExists);
+            Assert.AreEqual("",messageInWeb);
+        }
+        [TestMethod]
+        public void SendMessageToNewParticipant()
+        {
+            var scpPage = Initialize(Variables.loginEmail, Variables.loginPassword);
+            var user2 = Initialize(Variables.aliyahEmail, Variables.aliyahPassword);
+            scpPage.ClickOnButton(Variables.blueButtonTitle);
+            scpPage.ClickOnButton2(Variables.newGroupButton, 0);
+            scpPage.ClickOnButton2("button", 2);
+            scpPage.SearchContact(Variables.contactName);
+            scpPage.ClickOnButton(Variables.contactNameXPath);
+            scpPage.ClickOnButton2("button", 1);
+            scpPage.SearchContact(Variables.contactName1);
+            scpPage.ClickOnButton(Variables.contactTitle1);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 4);
+            scpPage.ClickOnButton2(Variables.blueButtonTagName, 2);
+            scpPage.EnterMessage(Variables.groupText);
+            scpPage.ClickOnButton(Variables.sendButton);
+            scpPage.ClickOnButton2("h1", 0);
+            scpPage.ClickOnButton(Variables.addNewParticipants);
+            scpPage.EnterTextByTag("input", Variables.aliyahName, 2);
+            scpPage.ClickOnButton(Variables.aliyahXPath);
+            scpPage.EnterMessage("Added user");
+            scpPage.ClickOnButton(Variables.sendButton);
+
+            var messageInWeb = user2.browser.FindElements(By.TagName("p"))[0].Text;
+            var groupExists = user2.browser.FindElement(By.XPath("//div[contains(text(),'Louisa C., Aashish G.')]")).Displayed;
+            scpPage.browser.Quit();
+            user2.browser.Quit();
+            Assert.IsTrue(groupExists);
+            Assert.AreEqual("Added user", messageInWeb);
+        }
+
     }
+
+
     [TestClass]
     public class SendMessages
     {
@@ -566,44 +651,6 @@ namespace SCP
             browser.ClickOnButton(Variables.loginButton);
             return browser;
 
-        }
-        [TestMethod]
-        public void DirectMessage()
-        {
-            var scpPage = Initialize();
-
-            scpPage.ClickOnButton2(Variables.blueButtonTagName, 1);
-            scpPage.ClickOnButton2(Variables.newChatButton,2);
-            scpPage.SearchContact(Variables.contactName);
-            scpPage.ClickOnButton(Variables.contactNameXPath);
-            scpPage.EnterMessage(Variables.messageText);
-            scpPage.ClickOnButton(Variables.sendButton);
-
-            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
-            scpPage.browser.Quit();
-            Assert.AreEqual(Variables.messageText, messageInWeb);
-        }
-        [TestMethod]
-        public void GroupMessage()
-        {
-            var scpPage = Initialize();
-
-            scpPage.ClickOnButton2(Variables.blueButtonTagName, 1);
-            scpPage.ClickOnButton2(Variables.newGroupButton,1);
-            scpPage.SearchContact(Variables.contactName);
-            scpPage.ClickOnButton(Variables.contactNameXPath);
-            scpPage.ClearFieldByTag(Variables.searchFieldTag);
-            scpPage.SearchContact(Variables.contactName1);
-            scpPage.ClickOnButton(Variables.contactNameXPath);
-            scpPage.ClickOnButton2(Variables.blueButtonTagName,1);
-            scpPage.EnterTextByTag("input", Variables.groupTitle,0);
-            scpPage.ClickOnButton2(Variables.blueButtonTagName, 1);
-            scpPage.EnterMessage(Variables.groupText);
-            scpPage.ClickOnButton(Variables.sendButton);
-
-            var messageInWeb = scpPage.browser.FindElement(By.TagName("p")).Text;
-            scpPage.browser.Quit();
-            Assert.AreEqual(Variables.groupText, messageInWeb);
         }
         [TestMethod]
         public void BroadcastMessage()

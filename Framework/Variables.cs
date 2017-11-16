@@ -47,6 +47,7 @@ namespace Framework
         public static string aliyahXPath = "//div[@title='Aliyah Miller']";
         public static string aliyahNameMessage = "//div[contains(text(),'Aliyah Miller')]";
         public static string contactName1 = "Aashish Gupta";
+        public static string contactTitle1 = "//div[@title='Aashish Gupta']";
         public static string contactNameXPath = "//*[contains(text(),'Unknown')]";
 
         public static string messageText = "E2E testing message";
@@ -67,11 +68,14 @@ namespace Framework
         public static string agreeToDelete = "//span[contains(text(),'Delete')]";
 
         public static string messageWasRead = "Message has been read";
+        public static string messageWasSent = "Message has been sent";
 
         public static string forgotPassword = "//*[contains(text(),'Forgot')]";
 
         public static string toggleMenu = "//button[@title='Toggle menu']";
         public static string signOut = "//*[contains(text(),'Sign out')]";
         public static string settings = "//*[contains(text(),'Settings')]";
+
+        public static string addNewParticipants = "//*[contains(text(), 'Add participants')]";
     }
 }
